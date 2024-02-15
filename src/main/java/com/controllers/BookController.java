@@ -16,5 +16,5 @@ class BookController {
         return List.of(
             new Book(10, "Học làm giàu", "Đạt Phan", 1231232131, true)
         );
-    }
+    };
 }
