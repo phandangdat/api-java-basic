@@ -1,16 +1,34 @@
 package com.models;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "book")
 public class Book {
-  private long BookID;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "book_id")
+  private int BookID;
+
+  @Column(name = "title")
   private String Title;
+
+  @Column(name = "author")
   private String Author;
-  private int PublicationYear;
+
+  @Column(name = "publication_year")
+  private LocalDateTime PublicationYear;
+
+  @Column(name = "available")
   private boolean Available;
 
   public Book() {
   }
 
-  public Book(long BookID, String Title, String Author, int PublicationYear, boolean Available) {
+  public Book(int BookID, String Title, String Author, LocalDateTime PublicationYear, boolean Available) {
     this.BookID = BookID;
     this.Title = Title;
     this.Author = Author;
@@ -22,7 +40,7 @@ public class Book {
     return BookID;
   }
 
-  public void setBookID(long BookID) {
+  public void setBookID(int BookID) {
     this.BookID = BookID;
   }
 
@@ -42,11 +60,11 @@ public class Book {
     this.Author = Author;
   }
 
-  public int getPublicationYear() {
+  public LocalDateTime getPublicationYear() {
     return PublicationYear;
   }
 
-  public void setPublicationYear(int PublicationYear) {
+  public void setPublicationYear(LocalDateTime PublicationYear) {
     this.PublicationYear = PublicationYear;
   }
 
