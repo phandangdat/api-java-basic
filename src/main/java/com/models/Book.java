@@ -11,13 +11,14 @@ public class Book {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "book_id")
-  private int BookID;
+  private int BookId;
 
   @Column(name = "title")
   private String Title;
 
-  @Column(name = "author")
-  private String Author;
+  @ManyToOne
+  @JoinColumn(name = "author_id")
+  private Author Author;
 
   @Column(name = "publication_year")
   private LocalDateTime PublicationYear;
@@ -28,20 +29,20 @@ public class Book {
   public Book() {
   }
 
-  public Book(int BookID, String Title, String Author, LocalDateTime PublicationYear, boolean Available) {
-    this.BookID = BookID;
+  public Book(int BookId, String Title, Author Author, LocalDateTime PublicationYear, boolean Available) {
+    this.BookId = BookId;
     this.Title = Title;
     this.Author = Author;
     this.PublicationYear = PublicationYear;
     this.Available = Available;
   }
 
-  public long getBookID() {
-    return BookID;
+  public int getBookId() {
+    return BookId;
   }
 
-  public void setBookID(int BookID) {
-    this.BookID = BookID;
+  public void setBookId(int BookId) {
+    this.BookId = BookId;
   }
 
   public String getTitle() {
@@ -52,11 +53,11 @@ public class Book {
     this.Title = Title;
   }
 
-  public String getAuthor() {
+  public Author getAuthor() {
     return Author;
   }
 
-  public void setAuthor(String Author) {
+  public void setAuthor(Author Author) {
     this.Author = Author;
   }
 
@@ -68,7 +69,7 @@ public class Book {
     this.PublicationYear = PublicationYear;
   }
 
-  public boolean isAvailable() {
+  public boolean getAvailable() {
     return Available;
   }
 
