@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.models.Author;
+import com.models.Book;
 import com.repositories.AuthorRepository;
 
 @Service
@@ -34,10 +35,13 @@ public class AuthorService {
   }
 
   @SuppressWarnings("null")
-  public void update(Author author, int authorId) {
-    authorRepository.findById(authorId).map(author1 -> {
-      author1.setName(author.getName());
-      return authorRepository.save(author1);
+  public void updateAuthor(Author author, int id) {
+    authorRepository.findById(id).map(authorId -> {
+      authorId.setEmail(author.getEmail());
+      authorId.setFirstName(author.getFirstName());
+      authorId.setLastName(author.getLastName());
+      authorId.setAvatar(author.getAvatar());
+      return authorRepository.save(authorId);
     })
         .orElseGet(() -> {
           return authorRepository.save(author);

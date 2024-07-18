@@ -34,7 +34,7 @@ public class AuthorController {
   @PostMapping("")
   private int saveAuthor(@RequestBody Author author) {
     authorService.saveAuthor(author);
-    return author.getAuthorId();
+    return author.getId();
   }
 
   @DeleteMapping("/{authorId}")
@@ -43,8 +43,8 @@ public class AuthorController {
   }
 
   @PutMapping("/{authorId}")
-  private Author update(@RequestBody Author author, @PathVariable("authorId") int authorId) {
-    authorService.update(author, authorId);
+  private Author updateAuthor(@RequestBody Author author, @PathVariable("authorId") int authorId) {
+    authorService.updateAuthor(author, authorId);
     return author;
   }
 }

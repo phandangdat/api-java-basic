@@ -1,15 +1,10 @@
 package com.models;
 
-import java.util.HashSet;
-
-import java.util.Set;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,36 +12,65 @@ import jakarta.persistence.Table;
 public class Author {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "author_id")
-  private int AuthorId;
+  @Column(name = "id")
+  private int Id;
 
-  @Column(name = "name")
-  private String Name;
+  @Column(name = "email")
+  private String Email;
 
-  @OneToMany(mappedBy = "Author")
-  private Set<Book> Books = new HashSet<>();
+  @Column(name = "first_name")
+  private String FirstName;
 
-  public int getAuthorId() {
-    return AuthorId;
+  @Column(name = "last_name")
+  private String LastName;
+
+  @Column(name = "avatar")
+  private String Avatar;
+
+  public int getId() {
+    return Id;
   }
 
-  public void setAuthorId(int authorId) {
-    AuthorId = authorId;
+  public void setId(int id) {
+    Id = id;
   }
 
-  public String getName() {
-    return Name;
+  public String getEmail() {
+    return Email;
   }
 
-  public void setName(String name) {
-    this.Name = name;
+  public void setEmail(String name) {
+    this.Email = name;
   }
 
-  public Set<Book> getBooks() {
-    return Books;
+  public String getFirstName() {
+    return FirstName;
   }
 
-  public void setBooks(Set<Book> books) {
-    this.Books = books;
+  public void setFirstName(String firstName) {
+    FirstName = firstName;
   }
+
+  public String getLastName() {
+    return LastName;
+  }
+
+  public void setLastName(String lastName) {
+    LastName = lastName;
+  }
+
+  public String getAvatar() {
+    return Avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    Avatar = avatar;
+  }
+
+  @Override
+  public String toString() {
+    return "Author [Id=" + Id + ", Email=" + Email + ", FirstName=" + FirstName + ", LastName=" + LastName + ", Avatar="
+        + Avatar + "]";
+  }
+
 }
