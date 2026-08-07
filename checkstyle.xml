@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  BzCom Checkstyle config - Spring Boot.
+
+  Sắp theo giá trị mà mỗi check mang lại: tính đúng đắn trước, rồi tới quy tắc
+  đặt tên và giới hạn kích thước, cuối cùng mới tới hình thức. Java không có
+  Prettier tương đương nên vẫn giữ vài check khoảng trắng - để nhẹ thôi, phần
+  nặng giao cho spotless hoặc formatter của IDE.
+
+  Chạy: mvn checkstyle:check
+-->
+<module name="Checker">
+  <property name="severity" value="warning"/>
+
+  <!-- File dài quá mức này thường là mấy class gộp lại làm một -->
+  <module name="FileLength">
+    <property name="max" value="1500"/>
+  </module>
+
+  <!-- Tab hiển thị rộng khác nhau ở mỗi editor nên thụt lề bị lệch -->
+  <module name="FileTabCharacter"/>
+
+  <!-- Khoảng trắng cuối dòng tạo nhiễu diff ở những dòng không ai sửa -->
+  <module name="RegexpSingleline">
+    <property name="format" value="\s+$"/>
+    <property name="message" value="Line has trailing spaces."/>
+  </module>
+
+  <!-- File nguồn nên kết thúc bằng dòng trống, đúng chuẩn công cụ POSIX -->
+  <module name="NewlineAtEndOfFile"/>
+
+  <module name="TreeWalker">
+
+    <!-- ==========================================================
+         Tính đúng đắn - nhóm này bắt bug thật
+         ========================================================== -->
+
+    <!-- equals() mà thiếu hashCode() làm hỏng tra cứu trong HashMap và HashSet -->
+    <module name="EqualsHashCode"/>
+
+    <!-- "a" == b so sánh tham chiếu chứ không so ký tự; phải dùng .equals -->
+    <module name="StringLiteralEquality"/>
+
+    <!-- switch thiếu default sẽ im lặng không làm gì với giá trị chưa xử lý -->
+    <module name="MissingSwitchDefault"/>
+
+    <!-- case thiếu break sẽ rơi xuống case kế tiếp, thường là ngoài ý muốn -->
+    <module name="FallThrough"/>
+
+    <!-- catch (Exception) nuốt luôn cả những bug bạn không định bắt -->
+    <module name="IllegalCatch"/>
+
+    <!-- throws Exception bắt mọi nơi gọi phải catch tất cả -->
+    <module name="IllegalThrows"/>
+
+    <!-- catch rỗng che giấu chính lỗi mà nó vừa bắt được -->
+    <module name="EmptyCatchBlock">
+      <property name="exceptionVariableName" value="expected|ignored"/>
+    </module>
+
+    <!-- Thân if/while/for rỗng gần như luôn do thừa một dấu chấm phẩy -->
+    <module name="EmptyBlock">
+      <property name="option" value="TEXT"/>
+    </module>
+
+    <!-- Dấu ; đứng một mình là câu lệnh không làm gì cả -->
+    <module name="EmptyStatement"/>
+
+    <!-- if (a) return true; else return false;  chính là  return a; -->
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+
+    <!-- if (x = 5) là phép gán chứ không phải so sánh -->
+    <module name="InnerAssignment"/>
+
+    <!-- Tham số trùng tên field nghĩa là một trong hai đang bị bỏ qua -->
+    <module name="HiddenField">
+      <property name="ignoreConstructorParameter" value="true"/>
+      <property name="ignoreSetter" value="true"/>
+    </module>
+
+    <!-- if không ngoặc mà thêm dòng thứ hai sẽ đổi ý nghĩa trong im lặng -->
+    <module name="NeedBraces"/>
+
+    <!-- Ghi đè equals(MyType) thay vì equals(Object) thì không bao giờ được gọi -->
+    <module name="CovariantEquals"/>
+
+    <!-- clone() và finalize() có hợp đồng tinh vi, rất dễ làm sai -->
+    <module name="NoClone"/>
+    <module name="NoFinalizer"/>
+
+    <!-- Sửa biến đếm bên trong thân vòng for khiến điều kiện dừng không còn đúng -->
+    <module name="ModifiedControlVariable"/>
+
+    <!-- Mỗi dòng một khai báo; 'int a, b = 0;' để a chưa được khởi tạo -->
+    <module name="MultipleVariableDeclarations"/>
+
+    <!-- Gán lại tham số làm mất giá trị mà nơi gọi truyền vào -->
+    <module name="ParameterAssignment"/>
+
+    <!-- Kiểu cụ thể trong API public trói người dùng vào cài đặt đó; nên khai interface -->
+    <module name="IllegalType">
+      <property name="illegalClassNames" value="java.util.HashSet, java.util.HashMap, java.util.ArrayList, java.util.LinkedList"/>
+      <property name="memberModifiers" value="LITERAL_PUBLIC, LITERAL_PROTECTED"/>
+    </module>
+
+    <!-- ==========================================================
+         Imports
+         ========================================================== -->
+
+    <!-- Import thừa vẫn nằm đó sau khi class nó trỏ tới đã bị xoá -->
+    <module name="UnusedImports">
+      <property name="processJavadoc" value="true"/>
+    </module>
+
+    <!-- Cùng một import bị khai hai lần -->
+    <module name="RedundantImport"/>
+
+    <!-- import x.*; giấu đi việc file thật sự phụ thuộc vào type nào, và hai
+         wildcard import có thể đụng nhau ở một tên class trùng -->
+    <module name="AvoidStarImport"/>
+
+    <!-- sun.* và com.sun.* là API nội bộ của JDK, có thể đổi bất cứ lúc nào -->
+    <module name="IllegalImport"/>
+
+    <!-- ==========================================================
+         Đặt tên - theo Google Java Style
+         ========================================================== -->
+
+    <module name="ConstantName"/>          <!-- UPPER_SNAKE_CASE cho static final -->
+    <module name="LocalFinalVariableName"/><!-- camelCase -->
+    <module name="LocalVariableName"/>     <!-- camelCase -->
+    <module name="MemberName"/>            <!-- camelCase cho field của instance -->
+    <module name="MethodName"/>            <!-- camelCase -->
+    <module name="PackageName"/>           <!-- tất cả viết thường -->
+    <module name="ParameterName"/>         <!-- camelCase -->
+    <module name="StaticVariableName"/>    <!-- camelCase cho static không final -->
+    <module name="TypeName"/>              <!-- PascalCase -->
+
+    <!-- ==========================================================
+         Kích thước - dấu hiệu cho thấy "chỗ này ôm quá nhiều việc"
+         ========================================================== -->
+
+    <!-- Method dài quá mức này thì khó nắm hết trong đầu cùng lúc -->
+    <module name="MethodLength">
+      <property name="max" value="100"/>
+    </module>
+
+    <!-- Danh sách tham số dài là dấu hiệu chúng nên gom thành một object.
+         Constructor được miễn: Spring inject thông qua nó -->
+    <module name="ParameterNumber">
+      <property name="max" value="7"/>
+      <property name="ignoreOverriddenMethods" value="true"/>
+      <property name="tokens" value="METHOD_DEF"/>
+    </module>
+
+    <!-- Lồng sâu là nơi lỗi lệch một đơn vị và nhánh bị bỏ sót hay ẩn mình -->
+    <module name="NestedIfDepth">
+      <property name="max" value="3"/>
+    </module>
+    <module name="NestedTryDepth">
+      <property name="max" value="2"/>
+    </module>
+
+    <!-- Số nhánh trong một method; cao quá thì nên dùng bảng tra hoặc đa hình -->
+    <module name="CyclomaticComplexity">
+      <property name="max" value="15"/>
+    </module>
+
+    <!-- ==========================================================
+         Đặc thù Spring Boot
+         ========================================================== -->
+
+    <!-- Số ma thuật trong logic nghiệp vụ không có tên nào giải thích nó. Các giá
+         trị index mảng và HTTP status thông dụng được miễn để bớt nhiễu -->
+    <module name="MagicNumber">
+      <property name="ignoreNumbers" value="-1, 0, 1, 2, 100, 200, 201, 204, 400, 401, 403, 404, 409, 422, 500"/>
+      <property name="ignoreAnnotation" value="true"/>
+      <property name="ignoreFieldDeclaration" value="true"/>
+    </module>
+
+    <!-- Class chỉ có method static thì không nên cho khởi tạo -->
+    <module name="HideUtilityClassConstructor"/>
+
+    <!-- Class không có lớp con nên khai final để không ai kế thừa nhầm -->
+    <module name="FinalClass"/>
+
+    <!-- Annotation @Override giúp compiler kiểm tra chữ ký method -->
+    <module name="MissingOverride"/>
+
+    <!-- @Deprecated và tag @deprecated trong Javadoc phải khớp nhau -->
+    <module name="MissingDeprecated"/>
+
+    <!-- ==========================================================
+         Hình thức - chỉ giữ phần tối thiểu
+         ========================================================== -->
+
+    <!-- 'if(' và 'for(' nhìn như lời gọi method -->
+    <module name="WhitespaceAfter"/>
+
+    <!-- Khoảng trắng nhất quán quanh toán tử và dấu ngoặc nhọn -->
+    <module name="WhitespaceAround">
+      <property name="allowEmptyConstructors" value="true"/>
+      <property name="allowEmptyMethods" value="true"/>
+      <property name="allowEmptyTypes" value="true"/>
+      <property name="allowEmptyLambdas" value="true"/>
+    </module>
+
+    <!-- Viết 'String[] args' thay vì 'String args[]' kiểu C -->
+    <module name="ArrayTypeStyle"/>
+
+    <!-- 'long x = 10L' - chữ l thường rất dễ nhầm với số 1 -->
+    <module name="UpperEll"/>
+
+    <!-- Thứ tự modifier theo đúng JLS: public static final -->
+    <module name="ModifierOrder"/>
+
+    <!-- 'final' trên thứ vốn đã final thì không thêm ý nghĩa gì -->
+    <module name="RedundantModifier"/>
+
+  </module>
+</module>
